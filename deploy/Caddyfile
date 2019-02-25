@@ -1,0 +1,21 @@
+:80 {
+    root /srv
+    log / stdout
+
+    gzip
+
+    header / {
+        Cache-Control "no-cache, no-store, must-revalidate"
+        Access-Control-Max-Age 0
+    }
+
+    rewrite {
+        if {path} not_match (^\/api\/|^\/manage\/|\.)
+        to /
+    }
+
+    proxy /api {$BACKEND_URL} {
+        without /api
+        transparent
+    }
+}
